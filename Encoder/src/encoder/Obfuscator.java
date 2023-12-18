@@ -42,7 +42,7 @@ public class Obfuscator {
 	
 	}
 	
-	public static String encodeWithShiftedTable(String plainText) {
+	public static String encode(String plainText) { // changed method name to encode . Commented by interviewer
         if (plainText == null || plainText.isEmpty()) {
             return "";
         }
@@ -77,31 +77,39 @@ public class Obfuscator {
         return encodedText.toString();
     }
 	
+
 	
-	public static String decode(String encodedText, String shifted) {
-        if (encodedText == null || encodedText.length() < 2) {
-            return "";
-        }
-
-        char offset = encodedText.charAt(0);
-        int offsetIndex = shifted.indexOf(offset);
-
-        StringBuilder decodedText = new StringBuilder();
-
-        for (int i = 1; i < encodedText.length(); i++) {
-            char c = encodedText.charAt(i);
-            if (shifted.indexOf(c) != -1) {
-                int index = (shifted.indexOf(c) - offsetIndex + shifted.length()) % shifted.length();
-                decodedText.append(shifted.charAt(index));
-            } else {
-                decodedText.append(c);
-            }
-        }
-
-        return decodedText.toString();
-    }
+	 // Changed method decode to meet requirement 
 	
-	
+	 public static String decode(String encodedText) {
+	        if (encodedText == null || encodedText.length() < 2) {
+	            return "";
+	        }
+
+	        // Choose 'B' as the offset character
+	        char offset = 'B';
+
+	        // Generate the shifted reference table
+	        String original = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()*+,-./";
+	        String shifted = shiftCharacters(original, 2);
+
+	        // Find the index of the offset character in the shifted reference table
+	        int offsetIndex = shifted.indexOf(offset);
+
+	        StringBuilder decodedText = new StringBuilder();
+
+	        for (int i = 1; i < encodedText.length(); i++) {
+	            char c = encodedText.charAt(i);
+	            if (shifted.indexOf(c) != -1) {
+	                int index = (shifted.indexOf(c) - offsetIndex + shifted.length()) % shifted.length();
+	                decodedText.append(shifted.charAt(index));
+	            } else {
+	                decodedText.append(c);
+	            }
+	        }
+
+	        return decodedText.toString();
+	    }
 
 	public static void main(String[] args) {
 		
@@ -122,12 +130,12 @@ public class Obfuscator {
 	    System.out.println("You entered: " + userInput);
 		
 		
-	    String originalText = "HELLO WORLD";
-	    String original = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()*+,-./";
-	    String shifted = shiftCharacters(original, 2);
-	    String encodedText = encodeWithShiftedTable(originalText);
-	    String decodedText = decode(encodedText,shifted);
-	    System.out.println("Original Text : " + originalText);
+	    String originalText = userInput;
+//	    String original = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()*+,-./";
+//	    String shifted = shiftCharacters(original, 2);
+	    String encodedText = encode(originalText);
+	    String decodedText = decode(encodedText);
+//	    System.out.println("Original Text : " + originalText);
 	    System.out.println("Encoded Text  : " + encodedText);
 	    System.out.println("Decoded Text  : " + decodedText);
 	    
